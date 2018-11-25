@@ -12,7 +12,7 @@ namespace BaiduExporter
     {
         private ChromiumWebBrowser webBrowser1 = null;
         //private string weburl = "http://localhost:6900/";
-        private string weburl = "https://nicenight.cc/app/baidu";
+        private string weburl = "https://www.nicenight.cc/app/baidu";
         private string localurl = "file:///" + Environment.CurrentDirectory.Replace("\\", "/") + "/";
         private string webui = "AriaNg";
         private Aria2Helper aria2;
@@ -32,10 +32,12 @@ namespace BaiduExporter
                 this.Width = config.GetInt("width");
             if (!string.IsNullOrEmpty(config.Get("webui")))
                 this.webui = config.Get("webui");
+            if (!string.IsNullOrEmpty(config.Get("weburl")))
+                this.weburl = config.Get("weburl");
 
-            server = new InternalWebServer(weburl);
+            //server = new InternalWebServer(weburl);
+            //this.Disposed += server.Dispose;
             aria2 = new Aria2Helper();
-            this.Disposed += server.Dispose;
             this.Disposed += aria2.Dispose;
 
             if (!string.IsNullOrEmpty(config.Get("aria2c")))
@@ -189,15 +191,16 @@ namespace BaiduExporter
             }
             else
             {
-                aria2.Stop();
-                server.Stop();
-                config.Set("height", this.Height);
-                config.Set("width", this.Width);
-                config.Set("aria2c", JsonConvert.SerializeObject(this.aria2.Config));
-                config.Set("notify", notify.Enabled);
-                config.Set("aria2", aria2.Enabled);
-                config.Set("webui", this.webui);
-                config.Save();
+                aria2?.Stop();
+                server?.Stop();
+                config?.Set("height", this.Height);
+                config?.Set("width", this.Width);
+                config?.Set("aria2c", JsonConvert.SerializeObject(this.aria2.Config));
+                config?.Set("notify", notify.Enabled);
+                config?.Set("aria2", aria2.Enabled);
+                config?.Set("webui", this.webui);
+                config?.Set("weburl", this.weburl);
+                config?.Save();
             }
         }
     }
